@@ -1,146 +1,83 @@
 package main
 
 import (
-	"dataclearing/conf"
+	"bufio"
 	"fmt"
-	"github.com/360EntSecGroup-Skylar/excelize"
-	"gorm.io/driver/mysql"
-	"gorm.io/gorm"
-	"gorm.io/gorm/logger"
+	"github.com/parnurzeal/gorequest"
+	"os"
+	"regexp"
 	"strings"
+	"time"
 )
 
-type JingJob struct {
-	ID                       int64  `json:"id" gorm:"id"`
-	Year                     string `json:"year" gorm:"year"`                                             // 年份
-	JobCode                  string `json:"job_code" gorm:"job_code"`                                     // 京职位代码，国部门代码-职位代码
-	JobName                  string `json:"job_name" gorm:"job_name"`                                     // 京职位名称，国招考职位
-	UnitName                 string `json:"unit_name" gorm:"unit_name"`                                   // 京单位名称，国部门名称
-	EmployDepartment         string `json:"employ_department" gorm:"employ_department"`                   // 京用人部门，国用人司局
-	InstitutionalNatural     string `json:"institutional_natural" gorm:"institutional_natural"`           // 京机构性质，国机构性质
-	JobLevel                 string `json:"job_level" gorm:"job_level"`                                   // 京职位层级，国机构层级
-	JobCategory              string `json:"job_category" gorm:"job_category"`                             // 京职位类别，国职位属性
-	JobDescription           string `json:"job_description" gorm:"job_description"`                       // 京职位简介，国职位简介
-	ExamType                 string `json:"exam_type" gorm:"exam_type"`                                   // 京— — — —，国考试类别
-	GrassrootsExperience     string `json:"grassroots_experience" gorm:"grassroots_experience"`           // 京— — — —，国服务基层项目工作经历
-	Count                    string `json:"count" gorm:"count"`                                           // 招考人数
-	EducationalRequire       string `json:"educational_require" gorm:"educational_require"`               // 学历要求
-	DegreeRequire            string `json:"degree_require" gorm:"degree_require"`                         // 学位要求
-	ProfessionalRequire      string `json:"professional_require" gorm:"professional_require"`             // 专业要求
-	PoliticalStatus          string `json:"political_status" gorm:"political_status"`                     // 政治面貌
-	Other                    string `json:"other" gorm:"other"`                                           // 其他条件
-	ProfessionalAblilityTest string `json:"professional_ablility_test" gorm:"professional_ablility_test"` // 是否组织专业能力测试
-	InterviewRatio           string `json:"interview_ratio" gorm:"interview_ratio"`                       // 面试人员比例 5:1
-	GrassrootsExperienceYear string `json:"grassroots_experience_year" gorm:"grassroots_experience_year"` // 基层工作最低年限
-	EnquirtyTel              string `json:"enquirty_tel" gorm:"enquirty_tel"`                             // 咨询电话
-	Website                  string `json:"website" gorm:"website"`                                       // 单位网站
-	Remark                   string `json:"remark" gorm:"remark"`                                         // 备注
-	Type1                    string `json:"type1" gorm:"type1"`                                           // 国考，京考
-	Type2                    string `json:"type2" gorm:"type2"`                                           // 京考：普通职位，面向大学生士兵职位，面向乡村振兴协理员等服务基层项目人员职位，面向残疾人职位，特殊职位\n国考：中央党群机关，中央国家行政机关（本级），中央国家行政机关省级以下直属机构，中央国家行政机关参照公务员法管理事业单位
-}
-
-// TableName 表名称
-func (*JingJob) TableName() string {
-	return "job"
-}
-
+// 2023年：https://www.gongkaoleida.com/user/exam/detail/414875?page=1
+//
+// 2022年：https://www.gongkaoleida.com/user/exam/detail/284219?page=1
+//
+// 2021年：https://www.gongkaoleida.com/user/exam/detail/173331
 func main() {
-	db, err := gorm.Open(mysql.Open(conf.DSN), &gorm.Config{Logger: logger.Discard})
+	//创建一个新文件，写入内容 5 句 “http://c.biancheng.net/golang/”
+	filePath := "./yeardata/2023.txt"
+	file, err := os.OpenFile(filePath, os.O_WRONLY|os.O_CREATE|os.O_APPEND, 0666)
 	if err != nil {
-		panic("failed to connect database")
+		fmt.Println("文件打开失败", err)
 	}
+	//及时关闭file句柄
+	defer file.Close()
+	//写入文件时，使用带缓存的 *Writer
+	write := bufio.NewWriter(file)
 
-	f, err := excelize.OpenFile("./conf/jing.xlsx")
-	if err != nil {
-		fmt.Println(err)
-		return
-	}
-	var jobs []JingJob
+	year2023(write)
+	//Flush将缓存的文件真正写入到文件中
+	write.Flush()
+}
 
-	type1 := "京考"
-	type2 := "特殊职位" //国考更改（sheet名）
-	// 获取 Sheet1 上所有单元格
-	rows := f.GetRows(type2)
-	for idx, row := range rows {
-		if idx <= 1 {
-			continue
+func year2023(write *bufio.Writer) {
+	var quchong = make(map[string]string, 10)
+
+	request := gorequest.New()
+	for page := 1; page <= 75; page++ {
+		request.Header = map[string]string{
+			":authority":                "www.gongkaoleida.com",
+			":method":                   "GET",
+			":path":                     fmt.Sprintf("/user/exam/detail/414875?page=%v", page),
+			":scheme":                   "https",
+			"Accept":                    "text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.7",
+			"Accept-Encoding":           "gzip, deflate, br, zstd",
+			"Accept-Language":           "zh-CN,zh;q=0.9,en;q=0.8,en-GB;q=0.7,en-US;q=0.6",
+			"Cache-Control":             "no-cache",
+			"Cookie":                    "\nHm_lvt_f721d958b1ffbdd95625a927f9bbe719=1712907152; Hm_lvt_a85566772a4d8c7093230e45128ffa8f=1717744454,1717918367; Hm_lvt_f721d958b1ffbdd95625a927f9bbe719=; XSRF-TOKEN=eyJpdiI6IkI5ZGJFa1FcL3o3WWk3WFwvcWx4MTg2dz09IiwidmFsdWUiOiJuR29MVzc0U1dUYWlQRlppcjRlSkM1TlNHVjlqb1dsUVRkRGs0RitHamNsQTRROGZEMlFuemFXNFd3VjFYVDlUIiwibWFjIjoiZmQxMzZhNWRjN2MxNGUzYjI3YzVjNGM3Y2YwODllYzU5ZTE0ZDUxMWRiMDNmZmMwODUyOTc3ZmQzZGFjNjFlYyJ9; gkld_session=eyJpdiI6IlVlVFBZM1RCRW1HcldWNE9Edkwxb3c9PSIsInZhbHVlIjoiKzdVWE16WjI1NWdQWFJpVmxzNllZVFJ1bjI1alA2WVpwQURZcjlONkNwbWVnTWQrRWlrVzJpR0NqYmhodmxWUUhleFJKWEVOZm9weHZtZ2EzOW9scVB5eHMwcUJUcmg1dnN3ekxuVXpRb0tZVVh3aE9lblFRRG90RHhwNWN2eFciLCJtYWMiOiJjOTVmMTYwZTVlNWJhYWQ0NjQ4MjM2NGJkYzM2NGJkNzFkNzM3OGQ2ZGNkNmQ2NTk0M2U2NmU4YjIwOTQ3MjliIn0%3D; Hm_lpvt_f721d958b1ffbdd95625a927f9bbe719=1717928623; Hm_lpvt_a85566772a4d8c7093230e45128ffa8f=1717928624",
+			"Pragma":                    "no-cache",
+			"Priority":                  "u=0, i",
+			"Sec-Ch-Ua":                 `Microsoft Edge";v="125", "Chromium";v="125", "Not.A/Brand";v="24"`,
+			"Sec-Ch-Ua-Mobile":          "?0",
+			"Sec-Fetch-Dest":            "document",
+			"Sec-Fetch-Mode":            "navigate",
+			"Sec-Fetch-Site":            "none",
+			"Sec-Fetch-User":            "?1",
+			"Upgrade-Insecure-Requests": "1",
+			"User-Agent":                "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/125.0.0.0 Safari/537.36 Edg/125.0.0.0",
 		}
-		var job JingJob
-		job.Type1 = type1
-		job.Type2 = type2
-		job.JobCode = row[1]
-
-		job.UnitName = row[2]
-		job.EmployDepartment = row[3]
-		job.InstitutionalNatural = row[4]
-		job.JobName = row[5]
-		job.JobLevel = row[6]
-		job.JobCategory = row[7]
-		job.JobDescription = row[8]
-		job.Count = row[9]
-
-		job.EducationalRequire = row[10]
-		job.DegreeRequire = row[11]
-		job.ProfessionalRequire = row[12]
-		job.PoliticalStatus = row[13]
-		job.Other = row[14]
-		job.ProfessionalAblilityTest = row[15]
-		job.InterviewRatio = row[16]
-		job.GrassrootsExperienceYear = row[17]
-		job.EnquirtyTel = row[18]
-		job.Website = row[19]
-		job.Remark = row[20]
-		job.EnquirtyTel = strings.Replace(job.EnquirtyTel, "\r", "", -1)
-		job.EnquirtyTel = strings.Replace(job.EnquirtyTel, "\n", ",", -1)
-
-		job.ExamType = "-"
-		job.GrassrootsExperience = "-"
-
-		job.Year = "2024"
-		jobs = append(jobs, job)
-		//fmt.Printf("job:%v\n", job)
-
-	}
-
-	// 获取数据完成
-	fmt.Println("获取数据完成")
-
-	var count int64
-	db.Table("job").Count(&count)
-	fmt.Println("表原始长度：", count)
-
-	//fmt.Println(jobs)
-	fmt.Println("获取出来全部jobs", len(jobs))
-
-	// 开始事务
-	tx := db.Begin()
-
-	// 滚动插入
-	var temp []JingJob
-	for _, job := range jobs {
-		temp = append(temp, job)
-		if len(temp) == 100 {
-			err = tx.Create(&temp).Error
-			if err != nil {
-				fmt.Println("插入数据失败", err)
-			}
-			temp = temp[:0]
+		_, body, errs := request.Get(fmt.Sprintf("https://www.gongkaoleida.com/user/exam/detail/414875?page=%v", page)).End()
+		fmt.Println(body, errs)
+		if errs != nil {
+			fmt.Println("出错！", errs)
+			return
 		}
-	}
-	err = tx.Create(&temp).Error
-	if err != nil {
-		fmt.Println("插入数据失败", err)
-	}
-	var count2 int64
 
-	tx.Table("job").Count(&count2)
+		re := regexp.MustCompile(`<td><a href="([^"]+)"`)
+		matches := re.FindAllStringSubmatch(body, -1)
 
-	fmt.Println("count2-count:", count2-count)
-
-	if count2-count == int64(len(jobs)) {
-		fmt.Println("提交事务:", tx.Commit().Error)
-	} else {
-		fmt.Println("回滚事务:", tx.Rollback().Error)
+		for _, match := range matches {
+			fmt.Println(match[1])
+			quchong[match[1]] = ""
+		}
+		fmt.Println(len(quchong))
+		time.Sleep(1 * time.Second)
 	}
 
+	for key, _ := range quchong {
+		ll := strings.Split(key, "/")
+		write.WriteString(fmt.Sprintf("%v\n", ll[len(ll)-1]))
+	}
 }
