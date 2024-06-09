@@ -10,7 +10,7 @@ import (
 )
 
 // Job undefined
-type Job struct {
+type GuoJob struct {
 	ID                       int64  `json:"id" gorm:"id"`
 	Year                     string `json:"year" gorm:"year"`                                             // 年份
 	JobCode                  string `json:"job_code" gorm:"job_code"`                                     // 京职位代码，国部门代码-职位代码
@@ -40,7 +40,7 @@ type Job struct {
 }
 
 // TableName 表名称
-func (*Job) TableName() string {
+func (*GuoJob) TableName() string {
 	return "job"
 }
 func guokao() {
@@ -54,7 +54,7 @@ func guokao() {
 		fmt.Println(err)
 		return
 	}
-	var jobs []Job
+	var jobs []GuoJob
 
 	type1 := "国考"
 	type2 := "中央党群机关" //国考更改（sheet名）
@@ -64,7 +64,7 @@ func guokao() {
 		if idx <= 1 {
 			continue
 		}
-		var job Job
+		var job GuoJob
 		job.Type1 = type1
 		job.Type2 = type2
 		//job.JobCode = row[0]
@@ -111,13 +111,8 @@ func guokao() {
 	}
 	//fmt.Println(jobs)
 
-	err = db.Create(&jobs).Error
-	if err != nil {
-		fmt.Println("插入数据失败", err)
-	}
-
 	// 滚动插入
-	var temp []Job
+	var temp []GuoJob
 	for _, job := range jobs {
 		temp = append(temp, job)
 		if len(temp) == 100 {
