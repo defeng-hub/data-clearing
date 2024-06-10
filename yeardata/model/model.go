@@ -1,7 +1,5 @@
 package model
 
-import "fmt"
-
 // "code":1, "message":"", "data":
 type Response struct {
 	Code    interface{} `json:"code"`
@@ -10,6 +8,8 @@ type Response struct {
 }
 
 type JobOtherLists []JobOtherList
+type jobDataLists []JobDataList
+type JobConditionLists []JobConditionList
 
 // Data
 // interview 面试
@@ -19,8 +19,8 @@ type Data struct {
 	Notice                    Notice                    `json:"notice"`           //❌没用：雷达的公告
 	CourseList                []CourseList              `json:"courseList"`       //❌没用：课程列表
 	Info                      Info                      `json:"info"`             //岗位信息
-	JobDataList               []JobDataList             `json:"jobDataList"`      //职位信息 ②
-	JobConditionList          []JobConditionList        `json:"jobConditionList"` //招考条件 ③
+	JobDataList               jobDataLists              `json:"jobDataList"`      //职位信息 ②
+	JobConditionList          JobConditionLists         `json:"jobConditionList"` //招考条件 ③
 	JobOtherList              JobOtherLists             `json:"jobOtherList"`     //岗位其他信息 ④
 	JobEnrollInfo             JobEnrollInfo             `json:"jobEnrollInfo"`    //✅APP端 ☆ 报名记录
 	EnrollTitle               string                    `json:"enrollTitle"`      //"报名数据" or "报名预测"
@@ -92,6 +92,56 @@ type Info struct {
 	HiresShow        string      `json:"hiresShow"`
 }
 type JobConditionList struct { //招考条件(大致包含：专业要求、学历要求、学历性质、学位要求、应届、性别要求、最低服务工作年限、服务基层项目、年龄要求等等)
+	//				{
+	//                "name": "专业要求",
+	//                "value": "本科：法学类（0301）研究生：法学（0301），法律（0351）",
+	//                "sort": 1
+	//            },
+	//            {
+	//                "name": "学历要求",
+	//                "value": "本科及以上",
+	//                "sort": 2
+	//            },
+	//            {
+	//                "name": "学位要求",
+	//                "value": "取得相应学位",
+	//                "sort": 4
+	//            },
+	//            {
+	//                "name": "政治面貌",
+	//                "value": "不限",
+	//                "sort": 5
+	//            },
+	//            {
+	//                "name": "应届",
+	//                "value": "2023应届毕业生",
+	//                "sort": 6
+	//            },
+	//            {
+	//                "name": "性别要求",
+	//                "value": "不限",
+	//                "sort": 7
+	//            },
+	//            {
+	//                "name": "服务基层项目",
+	//                "value": "不限",
+	//                "sort": 13
+	//            },
+	//            {
+	//                "name": "年龄要求",
+	//                "value": "18周岁以上、35周岁以下（1986年11月至2004年11月期间出生）",
+	//                "sort": 14
+	//            },
+	//            {
+	//                "name": "资格证书",
+	//                "value": "通过国家司法考试或国家统一法律职业资格考试（A类）",
+	//                "sort": 16
+	//            },
+	//            {
+	//                "name": "备注",
+	//                "value": "通过国家司法考试或国家统一法律职业资格考试（A类）。",
+	//                "sort": 17
+	//            }
 	Name  string `json:"name"`
 	Value string `json:"value"`
 	Sort  int    `json:"sort"`
@@ -316,10 +366,31 @@ type HistoryInterviewInfo struct {
 func (j JobOtherLists) Get(name string) string {
 	for _, obj := range j {
 		if obj.Name == name {
-			fmt.Println("get", obj.Value)
+			//fmt.Println("get1", obj.Value)
 			return obj.Value
 		}
 	}
-	fmt.Println("get", "-")
+	//fmt.Println("get1", "-")
+	return ""
+}
+
+func (j jobDataLists) Get(name string) string {
+	for _, obj := range j {
+		if obj.Name == name {
+			//fmt.Println("get2", obj.Value)
+			return obj.Value
+		}
+	}
+	//fmt.Println("get2", "-")
+	return ""
+}
+func (j JobConditionLists) Get(name string) string {
+	for _, obj := range j {
+		if obj.Name == name {
+			//fmt.Println("get3", obj.Value)
+			return obj.Value
+		}
+	}
+	//fmt.Println("get3", "-")
 	return ""
 }

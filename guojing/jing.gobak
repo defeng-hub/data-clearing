@@ -41,11 +41,11 @@ type JingJob struct {
 
 // TableName 表名称
 func (*JingJob) TableName() string {
-	return "job"
+	return "v2_guokao_jingkao_table"
 }
 
 func main() {
-	db, err := gorm.Open(mysql.Open(conf.DSN), &gorm.Config{Logger: logger.Discard})
+	db, err := gorm.Open(mysql.Open(conf.DSNL), &gorm.Config{Logger: logger.Discard})
 	if err != nil {
 		panic("failed to connect database")
 	}
@@ -106,7 +106,7 @@ func main() {
 	fmt.Println("获取数据完成")
 
 	var count int64
-	db.Table("job").Count(&count)
+	db.Table("v2_guokao_jingkao_table").Count(&count)
 	fmt.Println("表原始长度：", count)
 
 	//fmt.Println(jobs)
@@ -133,7 +133,7 @@ func main() {
 	}
 	var count2 int64
 
-	tx.Table("job").Count(&count2)
+	tx.Table("v2_guokao_jingkao_table").Count(&count2)
 
 	fmt.Println("count2-count:", count2-count)
 
