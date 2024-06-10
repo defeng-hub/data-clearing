@@ -1,4 +1,4 @@
-package script
+package _024国京考
 
 import (
 	"dataclearing/conf"
