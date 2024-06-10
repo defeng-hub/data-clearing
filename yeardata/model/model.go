@@ -10,6 +10,7 @@ type Response struct {
 type JobOtherLists []JobOtherList
 type jobDataLists []JobDataList
 type JobConditionLists []JobConditionList
+type EnrollFieldsLists []EnrollFieldsList
 
 // Data
 // interview 面试
@@ -166,22 +167,22 @@ type FloatingWindow struct {
 	Remark      string `json:"remark"`
 }
 type JobEnrollInfo struct {
-	EnrollFieldsList   []EnrollFieldsList `json:"enrollFieldsList"` //缴费情况
-	EnrollStatus       int                `json:"enrollStatus"`
-	EnrollURL          string             `json:"enrollUrl"`      //跳转链接，公考报名大数据“https://www.gongkaoleida.com/v-activity/sign-up-for-big-data/index.html#/bigdata?examId=588063”
-	LastUpdateTime     string             `json:"lastUpdateTime"` //最近一次更新时间
-	Remark             string             `json:"remark"`         //报名数据更新时间为每日10点、14点、17点，数据来源于网络，仅供参考！
-	SourceName         string             `json:"sourceName"`     //数据来源：来源网络（公考雷达整理发布）
-	SourceURL          string             `json:"sourceUrl"`      //云岭先锋网网站报名系统
-	SchemeURL          string             `json:"schemeUrl"`
-	EntranceName       string             `json:"entranceName"`
-	Tag                string             `json:"tag"`
-	UpdateNote         string             `json:"updateNote"`
-	LastUpdateTimeName string             `json:"lastUpdateTimeName"` //更新时间
-	UpdateStatusTag    string             `json:"updateStatusTag"`
-	FloatingWindow     FloatingWindow     `json:"floatingWindow"` //报名数据窗口下的一条数据
-	FieldsTag          string             `json:"fieldsTag"`
-	FieldsTagNotice    string             `json:"fieldsTagNotice"`
+	EnrollFieldsList   EnrollFieldsLists `json:"enrollFieldsList"` //缴费情况
+	EnrollStatus       int               `json:"enrollStatus"`
+	EnrollURL          string            `json:"enrollUrl"`      //跳转链接，公考报名大数据“https://www.gongkaoleida.com/v-activity/sign-up-for-big-data/index.html#/bigdata?examId=588063”
+	LastUpdateTime     string            `json:"lastUpdateTime"` //最近一次更新时间
+	Remark             string            `json:"remark"`         //报名数据更新时间为每日10点、14点、17点，数据来源于网络，仅供参考！
+	SourceName         string            `json:"sourceName"`     //数据来源：来源网络（公考雷达整理发布）
+	SourceURL          string            `json:"sourceUrl"`      //云岭先锋网网站报名系统
+	SchemeURL          string            `json:"schemeUrl"`
+	EntranceName       string            `json:"entranceName"`
+	Tag                string            `json:"tag"`
+	UpdateNote         string            `json:"updateNote"`
+	LastUpdateTimeName string            `json:"lastUpdateTimeName"` //更新时间
+	UpdateStatusTag    string            `json:"updateStatusTag"`
+	FloatingWindow     FloatingWindow    `json:"floatingWindow"` //报名数据窗口下的一条数据
+	FieldsTag          string            `json:"fieldsTag"`
+	FieldsTagNotice    string            `json:"fieldsTagNotice"`
 }
 type VipAuthList struct {
 	JobEnrollForecast         int `json:"jobEnrollForecast"`
@@ -195,25 +196,25 @@ type Legend struct { //报名预测中的折线图
 }
 
 type JobInterviewInfo struct { //进面分数
-	EnrollFieldsList   []EnrollFieldsList `json:"enrollFieldsList"`
-	EnrollStatus       int                `json:"enrollStatus"`
-	EnrollURL          string             `json:"enrollUrl"`      //公考雷达进面分数查询链接：https://ylxf.1237125.cn/Html/News/2024/4/8/444149.html
-	LastUpdateTime     string             `json:"lastUpdateTime"` //更新时间
-	Remark             string             `json:"remark"`         //备注：呈现为资格审查名单笔试成绩，部分职位为进入体能测评人员名单笔试成绩，仅供参考！
-	SourceName         string             `json:"sourceName"`     //来源：云岭先锋（公考雷达整理发布）
-	SourceURL          string             `json:"sourceUrl"`      //云岭先锋网址链接 https://ylxf.1237125.cn/Html/News/2024/4/8/444149.html
-	SchemeURL          string             `json:"schemeUrl"`
-	EntranceName       string             `json:"entranceName"`
-	Tag                string             `json:"tag"`
-	InterviewTitle     string             `json:"interviewTitle"` //进面分数线、考生晒分、理念进面分
-	InterviewTips      string             `json:"interviewTips"`
-	NamelistType       int                `json:"namelistType"`
-	UpdateNote         string             `json:"updateNote"`
-	LastUpdateTimeName string             `json:"lastUpdateTimeName"`
-	UpdateStatusTag    string             `json:"updateStatusTag"`
-	FieldsTag          string             `json:"fieldsTag"`
-	FloatingWindow     interface{}        `json:"floatingWindow"` //进面分数线(同报名数据)下方的一段文字：本考试平均进面分：125:1,职位分数线可查看进面专题>
-	FieldsTagNotice    string             `json:"fieldsTagNotice"`
+	EnrollFieldsList   EnrollFieldsLists `json:"enrollFieldsList"`
+	EnrollStatus       int               `json:"enrollStatus"`
+	EnrollURL          string            `json:"enrollUrl"`      //公考雷达进面分数查询链接：https://ylxf.1237125.cn/Html/News/2024/4/8/444149.html
+	LastUpdateTime     string            `json:"lastUpdateTime"` //更新时间
+	Remark             string            `json:"remark"`         //备注：呈现为资格审查名单笔试成绩，部分职位为进入体能测评人员名单笔试成绩，仅供参考！
+	SourceName         string            `json:"sourceName"`     //来源：云岭先锋（公考雷达整理发布）
+	SourceURL          string            `json:"sourceUrl"`      //云岭先锋网址链接 https://ylxf.1237125.cn/Html/News/2024/4/8/444149.html
+	SchemeURL          string            `json:"schemeUrl"`
+	EntranceName       string            `json:"entranceName"`
+	Tag                string            `json:"tag"`
+	InterviewTitle     string            `json:"interviewTitle"` //进面分数线、考生晒分、理念进面分
+	InterviewTips      string            `json:"interviewTips"`
+	NamelistType       int               `json:"namelistType"`
+	UpdateNote         string            `json:"updateNote"`
+	LastUpdateTimeName string            `json:"lastUpdateTimeName"`
+	UpdateStatusTag    string            `json:"updateStatusTag"`
+	FieldsTag          string            `json:"fieldsTag"`
+	FloatingWindow     interface{}       `json:"floatingWindow"` //进面分数线(同报名数据)下方的一段文字：本考试平均进面分：125:1,职位分数线可查看进面专题>
+	FieldsTagNotice    string            `json:"fieldsTagNotice"`
 }
 
 type HistoryInterviewScoreInfo struct {
@@ -392,5 +393,14 @@ func (j JobConditionLists) Get(name string) string {
 		}
 	}
 	//fmt.Println("get3", "-")
+	return ""
+}
+
+func (j EnrollFieldsLists) Get(name string) string {
+	for _, obj := range j {
+		if obj.Name == name {
+			return obj.Value
+		}
+	}
 	return ""
 }
