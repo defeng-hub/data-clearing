@@ -16,7 +16,7 @@ type TbJingkao struct {
 	JobCode                  string `gorm:"type:varchar(50);comment:'职位代码'" json:"job_code"`
 	UnitName                 string `gorm:"type:varchar(100);comment:'单位名称'" json:"unit_name"`
 	EmployDepartment         string `gorm:"type:varchar(80);comment:'用人部门'" json:"employ_department"`
-	InstituonalNatural       string `gorm:"type:varchar(100);comment:'机构性质'" json:"instituonal_natural"`
+	InstitutionNatural       string `gorm:"type:varchar(100);comment:'机构性质'" json:"institution_natural"`
 	JobName                  string `gorm:"type:varchar(80);comment:'职位名称'" json:"job_name"`
 	JobLevel                 string `gorm:"type:varchar(50);comment:'职位层级'" json:"job_level"`
 	JobCategory              string `gorm:"type:varchar(50);comment:'职位类别'" json:"job_category"`
@@ -76,7 +76,7 @@ func main() {
 
 		job.UnitName = row[2]
 		job.EmployDepartment = row[3]
-		job.InstituonalNatural = row[4]
+		job.InstitutionNatural = row[4]
 		job.JobName = row[5]
 		job.JobLevel = row[6]
 		job.JobCategory = row[7]
