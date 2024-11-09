@@ -124,5 +124,4 @@ func zuidifen() {
 }
 
 func main() {
-	zuidifen()
 }
