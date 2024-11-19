@@ -44,9 +44,20 @@ func NewRegistrationData(row []string) RegistrationData {
 			row1, _ := strconv.ParseInt(row[i], 10, 64)
 			row2, _ := strconv.ParseInt(row[i+1], 10, 64)
 			row3, _ := strconv.ParseInt(row[i+2], 10, 64)
+
+			title := Ddate[i/3]
+			if title == "20241117" {
+				title = "20241118-9点"
+			}
+			if title == "20241118" {
+				title = "20241118-18点"
+			}
+			if title == "20241119" {
+				title = "20241119-9点"
+			}
 			e := Entry{
 				Time:          t1,
-				Title:         Ddate[i/3],
+				Title:         title,
 				Baomingrenshu: row1,
 				Guoshenrenshu: row2,
 				Daishenrenshu: row3,
@@ -68,7 +79,7 @@ func main() {
 		panic("failed to connect database")
 	}
 	var year = "2025"
-	type2 := "Sheet1" //国考更改（sheet名）
+	type2 := "最终清洗结果" //国考更改（sheet名）
 	f, err := excelize.OpenFile("./jingkao-2025quxian/2025quxian.xlsx")
 	if err != nil {
 		fmt.Println(err)
