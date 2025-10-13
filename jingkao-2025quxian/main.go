@@ -40,20 +40,48 @@ func NewRegistrationData(row []string) RegistrationData {
 		}
 		if i%3 == 1 {
 
-			t1, _ := strconv.ParseInt(Ddate[i/3], 10, 64)
+			//t1, _ := strconv.ParseInt(Ddate[i/3], 10, 64)
 			row1, _ := strconv.ParseInt(row[i], 10, 64)
 			row2, _ := strconv.ParseInt(row[i+1], 10, 64)
 			row3, _ := strconv.ParseInt(row[i+2], 10, 64)
 
+			var t1 int64
 			title := Ddate[i/3]
-			if title == "20241117" {
-				title = "20241118-9点"
+			if title == "20241118a" {
+				title = "11.18-9:00"
+				t1 = 202411181
 			}
-			if title == "20241118" {
-				title = "20241118-18点"
+			if title == "20241118b" {
+				title = "11.18-18:00"
+				t1 = 202411182
 			}
-			if title == "20241119" {
-				title = "20241119-9点"
+			if title == "20241119a" {
+				title = "11.19-9:00"
+				t1 = 202411191
+			}
+			if title == "20241119b" {
+				title = "11.19-18:00"
+				t1 = 202411192
+			}
+			if title == "20241120a" {
+				title = "11.20-9:00"
+				t1 = 202411201
+			}
+			if title == "20241120b" {
+				title = "11.20-18:00"
+				t1 = 202411202
+			}
+			if title == "20241121a" {
+				title = "11.21-9:00"
+				t1 = 202411211
+			}
+			if title == "20241121b" {
+				title = "11.21-18:00"
+				t1 = 202411212
+			}
+			if title == "20241122a" {
+				title = "11.22-9:00"
+				t1 = 202411221
 			}
 			e := Entry{
 				Time:          t1,
