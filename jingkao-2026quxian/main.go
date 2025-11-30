@@ -48,11 +48,42 @@ func NewRegistrationData(row []string) RegistrationData {
 
 			var t1 int64
 			title := Ddate[i/3]
-			if title == "20241115a" {
-				title = "11.15-9:00"
-				t1 = 202411151
+			if title == "20251117b" {
+				title = "11.17-18:00"
+				t1 = 202511172
 			}
-
+			if title == "20251118a" {
+				title = "11.18-09:00"
+				t1 = 202511181
+			}
+			if title == "20251118b" {
+				title = "11.18-18:00"
+				t1 = 202511182
+			}
+			if title == "20251119a" {
+				title = "11.19-09:00"
+				t1 = 202511191
+			}
+			if title == "20251119b" {
+				title = "11.19-18:00"
+				t1 = 202511192
+			}
+			if title == "20251120a" {
+				title = "11.20-09:00"
+				t1 = 202511201
+			}
+			if title == "20251120b" {
+				title = "11.20-18:00"
+				t1 = 202511202
+			}
+			if title == "20251121a" {
+				title = "11.21-09:00"
+				t1 = 202511211
+			}
+			if title == "20251121b" {
+				title = "11.21-18:00"
+				t1 = 202511212
+			}
 			e := Entry{
 				Time:          t1,
 				Title:         title,
